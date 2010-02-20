@@ -108,13 +108,39 @@ namespace Ondit {
         }
 
         public static RawMessage FromRaw(string raw) {
-            throw new NotImplementedException();
+            var re = new Regex(@"^(:(?<prefix>.*?)[ ]+)?  (?<args>.*?)  ([ ]:(?<lastarg>.*?))?$", RegexOptions.IgnorePatternWhitespace);
+
+            var match = re.Match(raw);
+            var message = new RawMessage();
+
+            if(!match.Success) {
+                return message;
+            }
+
+            if(match.Groups["prefix"].Success) {
+                message.Host = match.Groups["prefix"].Value;
+            }
+
+            string[] rawArgs = match.Groups["args"].Value.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            if(match.Groups["lastarg"].Success) {
+                var argList = rawArgs.ToList();
+                argList.Add(match.Groups["lastarg"].Value);
+                rawArgs = argList.ToArray();
+            }
+
+            if(rawArgs.Length > 0) {
+                message.Command = rawArgs[0];
+                message.Arguments = rawArgs.Skip(1).ToArray();
+            }
+
+            return message;
         }
 
         public override string ToString() {
             string output = "";
 
-            if(Host != null) {
+            if(Host != null && Host.Trim() != "") {
                 output += ":" + Host + " ";
             }
 
