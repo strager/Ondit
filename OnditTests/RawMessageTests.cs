@@ -14,7 +14,7 @@ namespace Ondit.Tests {
 
             Assert.AreEqual("~a!b@c.d", message.Host);
             Assert.AreEqual("PRIVMSG", message.Command);
-            Assert.AreEqual(2, message.Arguments);
+            Assert.AreEqual(2, message.Arguments.Length);
             Assert.AreEqual("rec", message.Arguments[0]);
             Assert.AreEqual("message goes here", message.Arguments[1]);
         }
