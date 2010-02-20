@@ -31,17 +31,17 @@ namespace Ondit.Tests {
         }
 
         [Test]
-        public static void ToRawException() {
-            Assert.Throws<InvalidOperationException>(delegate { (new RawMessage()).ToString(); });
-            Assert.Throws<InvalidOperationException>(delegate { (new RawMessage("")).ToString(); });
-            Assert.Throws<InvalidOperationException>(delegate { (new RawMessage("x", new string[] { "x y", "z" })).ToString(); });
-            Assert.Throws<InvalidOperationException>(delegate { (new RawMessage("x", null, "x y")).ToString(); });
+        public static void MessageValidity() {
+            Assert.IsFalse((new RawMessage()).IsValid());
+            Assert.IsFalse((new RawMessage("")).IsValid());
+            Assert.IsFalse((new RawMessage("x", new string[] { "x y", "z" })).IsValid());
+            Assert.IsFalse((new RawMessage("x", null, "x y")).IsValid());
 
-            Assert.DoesNotThrow(delegate { (new RawMessage("x")).ToString(); });
-            Assert.DoesNotThrow(delegate { (new RawMessage("x", new string[] { })).ToString(); });
-            Assert.DoesNotThrow(delegate { (new RawMessage("x", new string[] { "y z" })).ToString(); });
-            Assert.DoesNotThrow(delegate { (new RawMessage("x", new string[] { "x", "y z" })).ToString(); });
-            Assert.DoesNotThrow(delegate { (new RawMessage("x", new string[] { "x", "y z" }, "abc")).ToString(); });
+            Assert.IsTrue((new RawMessage("x")).IsValid());
+            Assert.IsTrue((new RawMessage("x", new string[] { })).IsValid());
+            Assert.IsTrue((new RawMessage("x", new string[] { "y z" })).IsValid());
+            Assert.IsTrue((new RawMessage("x", new string[] { "x", "y z" })).IsValid());
+            Assert.IsTrue((new RawMessage("x", new string[] { "x", "y z" }, "abc")).IsValid());
         }
     }
 }
