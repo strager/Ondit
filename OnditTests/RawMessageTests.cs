@@ -29,5 +29,19 @@ namespace Ondit.Tests {
 
             Assert.AreEqual(":~a!b@c.d PRIVMSG rec :message goes here", message.ToString());
         }
+
+        [Test]
+        public static void ToRawException() {
+            Assert.Throws<InvalidOperationException>(delegate { (new RawMessage()).ToString(); });
+            Assert.Throws<InvalidOperationException>(delegate { (new RawMessage("")).ToString(); });
+            Assert.Throws<InvalidOperationException>(delegate { (new RawMessage("x", new string[] { "x y", "z" })).ToString(); });
+            Assert.Throws<InvalidOperationException>(delegate { (new RawMessage("x", null, "x y")).ToString(); });
+
+            Assert.DoesNotThrow(delegate { (new RawMessage("x")).ToString(); });
+            Assert.DoesNotThrow(delegate { (new RawMessage("x", new string[] { })).ToString(); });
+            Assert.DoesNotThrow(delegate { (new RawMessage("x", new string[] { "y z" })).ToString(); });
+            Assert.DoesNotThrow(delegate { (new RawMessage("x", new string[] { "x", "y z" })).ToString(); });
+            Assert.DoesNotThrow(delegate { (new RawMessage("x", new string[] { "x", "y z" }, "abc")).ToString(); });
+        }
     }
 }
