@@ -43,5 +43,10 @@ namespace Ondit.Tests {
             Assert.IsTrue((new RawMessage("xy", new string[] { "x", "y z" })).IsValid());
             Assert.IsTrue((new RawMessage("xy", new string[] { "x", "y z" }, "abc")).IsValid());
         }
+
+        [Test]
+        public static void Equals() {
+            Assert.AreEqual(new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"), new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"));
+        }
     }
 }
