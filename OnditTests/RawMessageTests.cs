@@ -34,14 +34,14 @@ namespace Ondit.Tests {
         public static void MessageValidity() {
             Assert.IsFalse((new RawMessage()).IsValid());
             Assert.IsFalse((new RawMessage("")).IsValid());
-            Assert.IsFalse((new RawMessage("x", new string[] { "x y", "z" })).IsValid());
-            Assert.IsFalse((new RawMessage("x", null, "x y")).IsValid());
+            Assert.IsFalse((new RawMessage("xy", new string[] { "x y", "z" })).IsValid());
+            Assert.IsFalse((new RawMessage("xy", null, "x y")).IsValid());
 
-            Assert.IsTrue((new RawMessage("x")).IsValid());
-            Assert.IsTrue((new RawMessage("x", new string[] { })).IsValid());
-            Assert.IsTrue((new RawMessage("x", new string[] { "y z" })).IsValid());
-            Assert.IsTrue((new RawMessage("x", new string[] { "x", "y z" })).IsValid());
-            Assert.IsTrue((new RawMessage("x", new string[] { "x", "y z" }, "abc")).IsValid());
+            Assert.IsTrue((new RawMessage("xy")).IsValid());
+            Assert.IsTrue((new RawMessage("xy", new string[] { })).IsValid());
+            Assert.IsTrue((new RawMessage("xy", new string[] { "y z" })).IsValid());
+            Assert.IsTrue((new RawMessage("xy", new string[] { "x", "y z" })).IsValid());
+            Assert.IsTrue((new RawMessage("xy", new string[] { "x", "y z" }, "abc")).IsValid());
         }
     }
 }
