@@ -10,7 +10,7 @@ namespace Ondit.Tests {
     public class RawMessageTests {
         [Test]
         public static void FromRaw() {
-            string message = RawMessage.FromRaw(":~a!b@c.d PRIVMSG rec :message goes here");
+            RawMessage message = RawMessage.FromRaw(":~a!b@c.d PRIVMSG rec :message goes here");
 
             Assert.AreEqual("~a!b@c.d", message.Host);
             Assert.AreEqual("PRIVMSG", message.Command);
