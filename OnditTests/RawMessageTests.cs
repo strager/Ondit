@@ -12,7 +12,7 @@ namespace Ondit.Tests {
         public static void FromString() {
             RawMessage message = RawMessage.FromString(":~a!b@c.d PRIVMSG rec :message goes here");
 
-            Assert.AreEqual("~a!b@c.d", message.Host);
+            Assert.AreEqual("~a!b@c.d", message.Prefix);
             Assert.AreEqual("PRIVMSG", message.Command);
             Assert.AreEqual(2, message.Arguments.Length);
             Assert.AreEqual("rec", message.Arguments[0]);
@@ -23,7 +23,7 @@ namespace Ondit.Tests {
         public new static void ToString() {
             RawMessage message = new RawMessage();
 
-            message.Host = "~a!b@c.d";
+            message.Prefix = "~a!b@c.d";
             message.Command = "PRIVMSG";
             message.Arguments = new string[] { "rec", "message goes here" };
 

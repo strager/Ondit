@@ -38,7 +38,7 @@ namespace Ondit {
             public static string Message = @"(:" + Prefix + Space + @")?" + Command + Arguments;
         }
 
-        public string Host {
+        public string Prefix {
             get;
             set;
         }
@@ -68,7 +68,7 @@ namespace Ondit {
         public RawMessage(string command, string[] arguments, string host) {
             Command = command;
             Arguments = arguments;
-            Host = host;
+            Prefix = host;
         }
 
         public bool IsValid() {
@@ -76,7 +76,7 @@ namespace Ondit {
         }
 
         public bool IsPrefixValid() {
-            return Host == null || Expressions.GetFullMatcher(Expressions.Prefix).IsMatch(Host);
+            return Prefix == null || Expressions.GetFullMatcher(Expressions.Prefix).IsMatch(Prefix);
         }
 
         public bool IsCommandValid() {
@@ -118,7 +118,7 @@ namespace Ondit {
             }
 
             if(match.Groups["prefix"].Success) {
-                message.Host = match.Groups["prefix"].Value;
+                message.Prefix = match.Groups["prefix"].Value;
             }
 
             string[] rawArgs = match.Groups["args"].Value.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -140,8 +140,8 @@ namespace Ondit {
         public override string ToString() {
             string output = "";
 
-            if(Host != null && Host.Trim() != "") {
-                output += ":" + Host + " ";
+            if(Prefix != null && Prefix.Trim() != "") {
+                output += ":" + Prefix + " ";
             }
 
             if(Command == null) {
