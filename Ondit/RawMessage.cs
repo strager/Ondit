@@ -107,7 +107,7 @@ namespace Ondit {
             return true;
         }
 
-        public static RawMessage FromRaw(string raw) {
+        public static RawMessage FromString(string raw) {
             var re = new Regex(@"^(:(?<prefix>.*?)[ ]+)?  (?<args>.*?)  ([ ]:(?<lastarg>.*?))?$", RegexOptions.IgnorePatternWhitespace);
 
             var match = re.Match(raw);

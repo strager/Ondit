@@ -9,8 +9,8 @@ namespace Ondit.Tests {
     [TestFixture]
     public class RawMessageTests {
         [Test]
-        public static void FromRaw() {
-            RawMessage message = RawMessage.FromRaw(":~a!b@c.d PRIVMSG rec :message goes here");
+        public static void FromString() {
+            RawMessage message = RawMessage.FromString(":~a!b@c.d PRIVMSG rec :message goes here");
 
             Assert.AreEqual("~a!b@c.d", message.Host);
             Assert.AreEqual("PRIVMSG", message.Command);
@@ -20,7 +20,7 @@ namespace Ondit.Tests {
         }
 
         [Test]
-        public static void ToRaw() {
+        public new static void ToString() {
             RawMessage message = new RawMessage();
 
             message.Host = "~a!b@c.d";
