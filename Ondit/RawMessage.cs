@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Ondit {
-    public class RawMessage {
+    public class RawMessage : IEquatable<RawMessage> {
         private static class Expressions {
             public static Regex GetFullMatcher(string expression) {
                 return new Regex(@"^(" + expression + @")$");
@@ -161,6 +161,40 @@ namespace Ondit {
             }
 
             return output;
+        }
+
+        public bool Equals(RawMessage other) {
+            if(other == null) {
+                return false;
+            }
+
+            if(this.Prefix != other.Prefix || this.Command != other.Command) {
+                return false;
+            }
+
+            if(this.Arguments.Length != other.Arguments.Length) {
+                return false;
+            }
+
+            for(int i = 0; i < this.Arguments.Length; ++i) {
+                if(this.Arguments[i] != other.Arguments[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public override bool Equals(object obj) {
+            if(obj == null || !(obj is RawMessage)) {
+                return false;
+            }
+
+            return this.Equals(obj as RawMessage);
+        }
+
+        public override int GetHashCode() {
+            return base.GetHashCode() ^ Prefix.GetHashCode() ^ Command.GetHashCode() ^ Arguments.GetHashCode();
         }
     }
 }
