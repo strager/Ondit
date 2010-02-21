@@ -57,12 +57,8 @@ namespace Ondit {
             this(null) {
         }
 
-        public RawMessage(string command) :
-            this(command, null) {
-        }
-
-        public RawMessage(string command, string[] arguments) :
-            this(command, arguments, null) {
+        public RawMessage(string command, params string[] arguments) :
+            this(command, arguments, (string)null) {
         }
 
         public RawMessage(string command, string[] arguments, string host) {

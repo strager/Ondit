@@ -35,12 +35,14 @@ namespace Ondit.Tests {
             Assert.IsFalse((new RawMessage()).IsValid());
             Assert.IsFalse((new RawMessage("")).IsValid());
             Assert.IsFalse((new RawMessage("xy", new string[] { "x y", "z" })).IsValid());
-            Assert.IsFalse((new RawMessage("xy", null, "x y")).IsValid());
+            Assert.IsFalse((new RawMessage("xy", "x y", "z")).IsValid());
+            Assert.IsFalse((new RawMessage("xy", new string[] { }, "x y")).IsValid());
 
             Assert.IsTrue((new RawMessage("xy")).IsValid());
             Assert.IsTrue((new RawMessage("xy", new string[] { })).IsValid());
             Assert.IsTrue((new RawMessage("xy", new string[] { "y z" })).IsValid());
             Assert.IsTrue((new RawMessage("xy", new string[] { "x", "y z" })).IsValid());
+            Assert.IsTrue((new RawMessage("xy", "x", "y z")).IsValid());
             Assert.IsTrue((new RawMessage("xy", new string[] { "x", "y z" }, "abc")).IsValid());
         }
 
