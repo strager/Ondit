@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using NUnit.Framework;
+using Ondit.IO;
 
-namespace Ondit.Tests {
+namespace Ondit.Tests.IO {
     [TestFixture]
     public class RawMessageTextWriterTests {
         private static RawMessage messageA = new RawMessage("COMMAND", new string[] { "arg", "args here" }, "host");

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Ondit {
+namespace Ondit.IO {
     public interface IRawMessageWriter {
         void Write(RawMessage message);
     }

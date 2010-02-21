@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace Ondit {
+namespace Ondit.IO {
     public class RawMessageTextWriter : IRawMessageWriter, IDisposable {
         private static string messageDivider = "\r\n";
 
