@@ -14,7 +14,7 @@ namespace Ondit.Tests {
         [Test]
         public void TestWrite() {
             using(var stringWriter = new StringWriter())
-            using(var messageWriter = new RawMessageTextWriter(StringWriter)) {
+            using(var messageWriter = new RawMessageTextWriter(stringWriter)) {
                 messageWriter.Write(messageA);
                 messageWriter.Write(messageB);
 

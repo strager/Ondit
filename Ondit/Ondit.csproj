@@ -46,9 +46,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IRawMessageReader.cs" />
+    <Compile Include="IRawMessageWriter.cs" />
     <Compile Include="RawMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RawMessageTextReader.cs" />
+    <Compile Include="RawMessageTextWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
