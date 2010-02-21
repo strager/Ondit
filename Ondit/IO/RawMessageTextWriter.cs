@@ -16,6 +16,7 @@ namespace Ondit.IO {
 
         public void Write(RawMessage message) {
             this.source.Write(message.ToString() + messageDivider);
+            this.source.Flush();
         }
 
         private bool disposed = false;
