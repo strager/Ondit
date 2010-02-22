@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\Client.cs" />
+    <Compile Include="Client\ClientThreader.cs" />
     <Compile Include="IO\IRawMessageReader.cs" />
     <Compile Include="IO\IRawMessageWriter.cs" />
     <Compile Include="RawMessage.cs" />
