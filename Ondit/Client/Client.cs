@@ -26,7 +26,7 @@ namespace Ondit.Client {
 
         private IList<IDisposable> objectsToDispose = new List<IDisposable>();
 
-        public ChannelManager ChannelManager {
+        public ChannelManager Channels {
             get;
             private set;
         }
@@ -40,7 +40,7 @@ namespace Ondit.Client {
         }
 
         private Client() {
-            ChannelManager = new ChannelManager(this);
+            Channels = new ChannelManager(this);
         }
 
         public Client(string host, int port) :
