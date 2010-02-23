@@ -26,6 +26,11 @@ namespace Ondit.Client {
 
         private IList<IDisposable> objectsToDispose = new List<IDisposable>();
 
+        public ChannelManager ChannelManager {
+            get;
+            private set;
+        }
+
         private Socket MakeSocket(IPEndPoint endPoint) {
             var socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
@@ -34,7 +39,12 @@ namespace Ondit.Client {
             return socket;
         }
 
-        public Client(string host, int port) {
+        private Client() {
+            ChannelManager = new ChannelManager(this);
+        }
+
+        public Client(string host, int port) :
+            this() {
             foreach(var address in Dns.GetHostEntry(host).AddressList) {
                 var socket = MakeSocket(new IPEndPoint(address, port));
 
@@ -72,7 +82,8 @@ namespace Ondit.Client {
             RawMessageReceived += CheckPing;
         }
 
-        public Client(IRawMessageReader reader, IRawMessageWriter writer) {
+        public Client(IRawMessageReader reader, IRawMessageWriter writer) :
+            this() {
             this.reader = reader;
             this.writer = writer;
         }

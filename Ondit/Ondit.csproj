@@ -45,8 +45,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\Channel.cs" />
+    <Compile Include="Client\ChannelManager.cs" />
+    <Compile Include="Client\ChannelUser.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientThreader.cs" />
+    <Compile Include="Client\IConversable.cs" />
+    <Compile Include="Client\ServerUser.cs" />
     <Compile Include="IO\IRawMessageReader.cs" />
     <Compile Include="IO\IRawMessageWriter.cs" />
     <Compile Include="RawMessage.cs" />
