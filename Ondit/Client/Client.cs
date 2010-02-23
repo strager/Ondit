@@ -72,6 +72,11 @@ namespace Ondit.Client {
             RawMessageReceived += CheckPing;
         }
 
+        public Client(IRawMessageReader reader, IRawMessageWriter writer) {
+            this.reader = reader;
+            this.writer = writer;
+        }
+
         public bool IsConnected {
             get;
             protected set;
