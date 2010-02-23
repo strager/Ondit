@@ -34,15 +34,24 @@ namespace Ondit.Tests.Client {
         }
 
         [Test]
-        public void MessageSendEvent() {
+        public void MessageSentEvent() {
             ICollection<RawMessage> messages = new List<RawMessage>();
 
             messages.Add(new RawMessage("THEGAME", "a", "b", "cd ef g"));
+
+            IEnumerator<RawMessage> messageChecker = messages.GetEnumerator();
 
             var reader = new IO.Helpers.DummyRawMessageReader();
             var writer = new IO.Helpers.DummyRawMessageWriter();
 
             using(var client = new Ondit.Client.Client(reader, writer)) {
+                client.RawMessageSent += delegate(object sender, RawMessageEventArgs e) {
+                    bool elementExists = messageChecker.MoveNext();
+
+                    Assert.IsTrue(elementExists);
+                    Assert.AreEqual(messageChecker.Current, e.Message);
+                };
+
                 foreach(var message in messages) {
                     client.SendMessage(message);
                 }
@@ -66,6 +75,35 @@ namespace Ondit.Tests.Client {
                         var receivedMessage = client.HandleMessage();
 
                         Assert.AreEqual(expectedMessage, receivedMessage);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void MessageReceivedEvent() {
+            ICollection<RawMessage> expectedOutput = new List<RawMessage>();
+
+            expectedOutput.Add(new RawMessage("THEGAME", "a", "b", "cd ef g"));
+
+            string input = string.Join("\r\n", expectedOutput.Select((message) => message.ToString()).ToArray()) + "\r\n";
+
+            IEnumerator<RawMessage> messageChecker = expectedOutput.GetEnumerator();
+
+            var writer = new IO.Helpers.DummyRawMessageWriter();
+
+            using(var stringReader = new StringReader(input))
+            using(var reader = new RawMessageTextReader(stringReader)) {
+                using(var client = new Ondit.Client.Client(reader, writer)) {
+                    client.RawMessageReceived += delegate(object sender, RawMessageEventArgs e) {
+                        bool elementExists = messageChecker.MoveNext();
+
+                        Assert.IsTrue(elementExists);
+                        Assert.AreEqual(messageChecker.Current, e.Message);
+                    };
+
+                    foreach(var expectedMessage in expectedOutput) {
+                        client.HandleMessage();
                     }
                 }
             }
