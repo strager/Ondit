@@ -23,13 +23,13 @@ namespace Ondit.Tests.Client {
 
             using(var stringWriter = new StringWriter())
             using(var writer = new RawMessageTextWriter(stringWriter)) {
-                var client = new Ondit.Client.Client(reader, writer);
+                using(var client = new Ondit.Client.Client(reader, writer)) {
+                    foreach(var message in inputMessages) {
+                        client.SendMessage(message);
+                    }
 
-                foreach(var message in inputMessages) {
-                    client.SendMessage(message);
+                    Assert.AreEqual(expectedOutput, stringWriter.ToString());
                 }
-
-                Assert.AreEqual(expectedOutput, stringWriter.ToString());
             }
         }
 
@@ -41,16 +41,16 @@ namespace Ondit.Tests.Client {
 
             string input = string.Join("\r\n", expectedOutput.Select((message) => message.ToString()).ToArray()) + "\r\n";
 
-            var writer = new IO.Helpers.DummyRawMessageReader();
+            var writer = new IO.Helpers.DummyRawMessageWriter();
 
             using(var stringReader = new StringReader(input))
             using(var reader = new RawMessageTextReader(stringReader)) {
-                var client = new Ondit.Client.Client(reader, writer);
+                using(var client = new Ondit.Client.Client(reader, writer)) {
+                    foreach(var expectedMessage in expectedOutput) {
+                        var receivedMessage = client.HandleMessage();
 
-                foreach(var expectedMessage in expectedOutput) {
-                    var receivedMessage = client.HandleMessage();
-
-                    Assert.AreEqual(expectedMessage, receivedMessage);
+                        Assert.AreEqual(expectedMessage, receivedMessage);
+                    }
                 }
             }
         }
