@@ -86,7 +86,7 @@ namespace Ondit {
 
             for(int i = 0; i < Arguments.Length - 1; ++i) {
                 if(Arguments[i] == null) {
-                    return false;
+                    continue;
                 }
 
                 if(!Expressions.GetFullMatcher(Expressions.MiddleArgument).IsMatch(Arguments[i])) {
@@ -94,7 +94,7 @@ namespace Ondit {
                 }
             }
 
-            if(Arguments.Length - 1 >= 0) {
+            if(Arguments.Length - 1 >= 0 && Arguments[Arguments.Length - 1] != null) {
                 if(!Expressions.GetFullMatcher(Expressions.TrailingArgument).IsMatch(Arguments[Arguments.Length - 1])) {
                     return false;
                 }
