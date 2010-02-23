@@ -46,6 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\ChannelConversationTests.cs" />
+    <Compile Include="Client\ClientTests.cs" />
+    <Compile Include="IO\Helpers\DummyRawMessageReader.cs" />
+    <Compile Include="IO\Helpers\DummyRawMessageWriter.cs" />
     <Compile Include="IO\RawMessageTextReaderTests.cs" />
     <Compile Include="RawMessageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
