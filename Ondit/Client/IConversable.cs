@@ -5,8 +5,7 @@ using System.Text;
 
 namespace Ondit.Client {
     public interface IConversable {
-        string ConversationTarget {
-            get;
-        }
+        void SendMessage(string message);
+        void SendNotice(string notice);
     }
 }

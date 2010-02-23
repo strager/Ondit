@@ -30,9 +30,9 @@ namespace Ondit.Client {
             }
         }
 
-        private Client Client {
+        internal Client Client {
             get;
-            set;
+            private set;
         }
 
         public void Join() {
@@ -45,6 +45,14 @@ namespace Ondit.Client {
 
         public void Part() {
             Client.SendMessage(new RawMessage("PART", Name));
+        }
+
+        public void SendMessage(string message) {
+            Client.SendMessage(new RawMessage("PRIVMSG", Name, message));
+        }
+
+        public void SendNotice(string notice) {
+            Client.SendMessage(new RawMessage("NOTICE", Name, notice));
         }
 
         internal ICollection<ChannelUser> UserCollection {
