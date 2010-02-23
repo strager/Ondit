@@ -34,6 +34,22 @@ namespace Ondit.Tests.Client {
         }
 
         [Test]
+        public void MessageSendEvent() {
+            ICollection<RawMessage> messages = new List<RawMessage>();
+
+            messages.Add(new RawMessage("THEGAME", "a", "b", "cd ef g"));
+
+            var reader = new IO.Helpers.DummyRawMessageReader();
+            var writer = new IO.Helpers.DummyRawMessageWriter();
+
+            using(var client = new Ondit.Client.Client(reader, writer)) {
+                foreach(var message in messages) {
+                    client.SendMessage(message);
+                }
+            }
+        }
+
+        [Test]
         public void MessageReceive() {
             ICollection<RawMessage> expectedOutput = new List<RawMessage>();
 
