@@ -5,12 +5,6 @@ using System.Text;
 
 namespace Ondit.Client {
     public class Channel : IConversable {
-        public string ConversationTarget {
-            get {
-                return Name;
-            }
-        }
-
         private readonly string name;
 
         public string Name {
