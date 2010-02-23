@@ -35,6 +35,10 @@ namespace Ondit.Client {
             set;
         }
 
+        public void Join() {
+            Join(null);
+        }
+
         public void Join(string key) {
             Client.SendMessage(new RawMessage("JOIN", Name, key));
         }
