@@ -19,6 +19,11 @@ namespace Ondit.Client {
             private set;
         }
 
+        public UserManager Users {
+            get;
+            private set;
+        }
+
         public ConnectionStatus ConnectionStatus {
             get;
             protected set;
@@ -26,6 +31,7 @@ namespace Ondit.Client {
 
         private void Init() {
             Channels = new ChannelManager(this);
+            Users = new UserManager(this);
 
             RawMessageReceived += CheckWelcomeMessage;
             RawMessageReceived += CheckPing;
