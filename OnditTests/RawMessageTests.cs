@@ -12,7 +12,7 @@ namespace Ondit.Tests {
         public static void FromString() {
             RawMessage message = RawMessage.FromString(":~a!b@c.d PRIVMSG rec :message goes here");
 
-            Assert.AreEqual("~a!b@c.d", message.Prefix);
+            Assert.AreEqual("~a!b@c.d", message.Prefix.ToString());
             Assert.AreEqual("PRIVMSG", message.Command);
             Assert.AreEqual(2, message.Arguments.Length);
             Assert.AreEqual("rec", message.Arguments[0]);
@@ -23,7 +23,7 @@ namespace Ondit.Tests {
         public new static void ToString() {
             RawMessage message = new RawMessage();
 
-            message.Prefix = "~a!b@c.d";
+            message.Prefix = new RawMessagePrefix("~a!b@c.d");
             message.Command = "PRIVMSG";
             message.Arguments = new string[] { "rec", "message goes here" };
 
@@ -50,6 +50,11 @@ namespace Ondit.Tests {
         [Test]
         public static void Equals() {
             Assert.AreEqual(new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"), new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"));
+            Assert.AreNotEqual(new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"), new RawMessage("abq", new string[] { "def", "ghi jkl" }, "mno"));
+            Assert.AreNotEqual(new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"), new RawMessage("abc", new string[] { "dzf", "ghi jkl" }, "mno"));
+            Assert.AreNotEqual(new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"), new RawMessage("abc", new string[] { "def", "ghi jklasd" }, "mno"));
+            Assert.AreNotEqual(new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"), new RawMessage("abc", new string[] { "def", "123", "ghi jkl" }, "mno"));
+            Assert.AreNotEqual(new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"), new RawMessage("abc", new string[] { "def", "ghi jkl" }, "XYZ"));
         }
     }
 }

@@ -50,6 +50,7 @@
     <Compile Include="IO\Helpers\DummyRawMessageReader.cs" />
     <Compile Include="IO\Helpers\DummyRawMessageWriter.cs" />
     <Compile Include="IO\RawMessageTextReaderTests.cs" />
+    <Compile Include="RawMessagePrefixTests.cs" />
     <Compile Include="RawMessageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IO\RawMessageTextWriterTests.cs" />

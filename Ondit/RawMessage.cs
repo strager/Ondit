@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace Ondit {
     public class RawMessage : IEquatable<RawMessage> {
-        private static class Expressions {
+        internal static class Expressions {
             public static Regex GetFullMatcher(string expression) {
-                return new Regex(@"^(" + expression + @")$");
+                return new Regex(@"^(" + expression + @")$", RegexOptions.IgnorePatternWhitespace);
             }
 
             public static string CharString = @"[^ \b\0\n\r,]*?";
@@ -27,18 +27,22 @@ namespace Ondit {
             public static string Nick = Letter + @"(" + Letter + @"|" + Number + @"|" + SpecialChar + @").*?";
             public static string User = @"(" + NonWhite + @")+?";
             public static string Mask = @"[#$]" + CharString;
+            public static string Ident = @"[~]?";
 
             public static string To = Channel + @"|(" + User + @"@" + ServerName + @")|" + Nick + @"|" + Mask;
             public static string Target = To + @"(," + To + @")*?";
 
-            public static string Prefix = ServerName + @"|(" + Nick + @"(!" + User + @")?(@" + Host + @"))?";
+            public static string Prefix = @"(" + ServerName + @")|(" + Ident + @")(" + Nick + @"(!(" + User + @"))?(@(" + Host + @"))?)";
             public static string Command = Letter + @"(" + Letter + @")+?|(" + Number + @"){3}";
             public static string Arguments = @"(" + Space + MiddleArgument + @")*?(:" + Space + TrailingArgument + @")?";
 
             public static string Message = @"(:" + Prefix + Space + @")?" + Command + Arguments;
+
+            public static string LazyPrefix = @"(?<Ident>" + Ident + @")(?<Nick>.*?)(!(?<User>.*?))?(@(?<Host>.*?))?";
+            public static string LazyMessage = @"(:(?<prefix>.*?)[ ]+)?  (?<args>.*?)  ([ ]:(?<lastarg>.*?))?";
         }
 
-        public string Prefix {
+        public RawMessagePrefix Prefix {
             get;
             set;
         }
@@ -58,13 +62,17 @@ namespace Ondit {
         }
 
         public RawMessage(string command, params string[] arguments) :
-            this(command, arguments, (string)null) {
+            this(command, arguments, (RawMessagePrefix)null) {
         }
 
-        public RawMessage(string command, string[] arguments, string host) {
+        public RawMessage(string command, string[] arguments, string prefix) :
+            this(command, arguments, new RawMessagePrefix(prefix)) {
+        }
+
+        public RawMessage(string command, string[] arguments, RawMessagePrefix prefix) {
             Command = command;
             Arguments = arguments;
-            Prefix = host;
+            Prefix = prefix;
         }
 
         public bool IsValid() {
@@ -72,7 +80,7 @@ namespace Ondit {
         }
 
         public bool IsPrefixValid() {
-            return Prefix == null || Expressions.GetFullMatcher(Expressions.Prefix).IsMatch(Prefix);
+            return Prefix == null || Prefix.IsValid();
         }
 
         public bool IsCommandValid() {
@@ -104,7 +112,7 @@ namespace Ondit {
         }
 
         public static RawMessage FromString(string raw) {
-            var re = new Regex(@"^(:(?<prefix>.*?)[ ]+)?  (?<args>.*?)  ([ ]:(?<lastarg>.*?))?$", RegexOptions.IgnorePatternWhitespace);
+            var re = Expressions.GetFullMatcher(Expressions.LazyMessage);
 
             var match = re.Match(raw);
             var message = new RawMessage();
@@ -114,7 +122,7 @@ namespace Ondit {
             }
 
             if(match.Groups["prefix"].Success) {
-                message.Prefix = match.Groups["prefix"].Value;
+                message.Prefix = new RawMessagePrefix(match.Groups["prefix"].Value);
             }
 
             string[] rawArgs = match.Groups["args"].Value.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -136,7 +144,7 @@ namespace Ondit {
         public override string ToString() {
             string output = "";
 
-            if(Prefix != null && Prefix.Trim() != "") {
+            if(Prefix != null && Prefix.ToString().Trim() != "") {
                 output += ":" + Prefix + " ";
             }
 
@@ -164,7 +172,11 @@ namespace Ondit {
                 return false;
             }
 
-            if(this.Prefix != other.Prefix || this.Command != other.Command) {
+            if(this.Prefix != null && !this.Prefix.Equals(other.Prefix)) {
+                return false;
+            }
+
+            if(this.Command != other.Command) {
                 return false;
             }
 
