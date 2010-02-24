@@ -52,5 +52,30 @@ namespace Ondit.Client {
                 return UserOrNew(nick);
             }
         }
+
+        private void CheckMessage(object sender, RawMessageEventArgs e) {
+            CheckNickChange(e.Message);
+        }
+
+        private void CheckNickChange(RawMessage message) {
+            if(message.Command != "NICK") {
+                return;
+            }
+
+            if(message.Prefix == null || message.Prefix.Nick == null) {
+                return;
+            }
+
+            if(message.Arguments.Length < 1) {
+                return;
+            }
+
+            // Not a user we aren't tracking?  We don't care, then.
+            if(!users.ContainsKey(message.Arguments[0])) {
+                return;
+            }
+
+            ChangeUserNick(message.Prefix.Nick, message.Arguments[0]);
+        }
     }
 }
