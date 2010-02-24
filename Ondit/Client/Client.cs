@@ -33,8 +33,7 @@ namespace Ondit.Client {
             Channels = new ChannelManager(this);
             Users = new UserManager(this);
 
-            RawMessageReceived += CheckWelcomeMessage;
-            RawMessageReceived += CheckPing;
+            RawMessageReceived += CheckMessage;
         }
 
         private Client() {
@@ -80,15 +79,20 @@ namespace Ondit.Client {
             }
         }
 
-        private void CheckWelcomeMessage(object sender, RawMessageEventArgs e) {
-            if(e.Message.Command == "001") {
+        private void CheckMessage(object sender, RawMessageEventArgs e) {
+            CheckWelcomeMessage(e.Message);
+            CheckPing(e.Message);
+        }
+
+        private void CheckWelcomeMessage(RawMessage message) {
+            if(message.Command == "001") {
                 ConnectionStatus = ConnectionStatus.Connected;
             }
         }
 
-        private void CheckPing(object sender, RawMessageEventArgs e) {
-            if(e.Message.Command == "PING") {
-                SendMessage(new RawMessage("PONG", e.Message.Arguments));
+        private void CheckPing(RawMessage message) {
+            if(message.Command == "PING") {
+                SendMessage(new RawMessage("PONG", message.Arguments));
             }
         }
     }
