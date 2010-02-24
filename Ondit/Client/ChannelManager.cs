@@ -13,12 +13,12 @@ namespace Ondit.Client {
 
         private IDictionary<string, Channel> channels = new Dictionary<string, Channel>();
 
-        public Client Client {
+        public ClientBase Client {
             get;
             private set;
         }
 
-        public ChannelManager(Client client) {
+        public ChannelManager(ClientBase client) {
             Client = client;
         }
 

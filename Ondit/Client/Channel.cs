@@ -24,7 +24,7 @@ namespace Ondit.Client {
             }
         }
 
-        internal Client Client {
+        internal ClientBase Client {
             get;
             private set;
         }
@@ -54,7 +54,7 @@ namespace Ondit.Client {
             private set;
         }
 
-        internal Channel(Client client, string name) {
+        internal Channel(ClientBase client, string name) {
             this.name = name;
 
             this.UserCollection = new List<ChannelUser>();

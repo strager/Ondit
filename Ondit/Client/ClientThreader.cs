@@ -7,9 +7,9 @@ using System.ComponentModel;
 
 namespace Ondit.Client {
     public class ClientThreader {
-        private Client client;
+        private ClientBase client;
 
-        public Client Client {
+        public ClientBase Client {
             get {
                 return this.client;
             }
@@ -43,7 +43,7 @@ namespace Ondit.Client {
             this(null) {
         }
 
-        public ClientThreader(Client client) {
+        public ClientThreader(ClientBase client) {
             Client = client;
             Thread = new Thread(MessageLoop);
         }
