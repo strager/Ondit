@@ -11,6 +11,8 @@ namespace Ondit {
     public sealed class RawMessage : IEquatable<RawMessage> {
         internal static class Expressions {
             public static Regex GetFullMatcher(string expression) {
+                System.Diagnostics.Debug.Assert(expression != null, "expression is null");
+
                 return new Regex(@"^(" + expression + @")$", RegexOptions.IgnorePatternWhitespace);
             }
 
@@ -152,7 +154,12 @@ namespace Ondit {
         /// </summary>
         /// <param name="raw">String containing the raw message.</param>
         /// <returns>Message <paramref name="raw"/> represents.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="raw"/> is null.</exception>
         public static RawMessage FromString(string raw) {
+            if(raw == null) {
+                throw new ArgumentNullException("raw");
+            }
+
             var re = Expressions.GetFullMatcher(Expressions.LazyMessage);
 
             var match = re.Match(raw);
@@ -185,7 +192,8 @@ namespace Ondit {
         /// <summary>
         /// Converts this message into a raw string message as defined by the IRC RFC.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Raw string representing the message.</returns>
+        /// <exception cref="InvalidOperationException"><see cref="Command"/> is null.</exception>
         public override string ToString() {
             string output = "";
 
