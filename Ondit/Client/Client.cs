@@ -71,6 +71,8 @@ namespace Ondit.Client {
         /// <summary>
         /// Connects and authenticates to the IRC server.
         /// </summary>
+        /// <exception cref="ObjectDisposedException"/>
+        /// <exception cref="InvalidOperationException">Cannot attempt to connect when not unconnected</exception>
         public void Connect() {
             Connect(null);
         }
@@ -79,6 +81,8 @@ namespace Ondit.Client {
         /// Connects and authenticates to the IRC server.
         /// </summary>
         /// <param name="password">IRC server password.</param>
+        /// <exception cref="ObjectDisposedException"/>
+        /// <exception cref="InvalidOperationException">Cannot attempt to connect when not unconnected</exception>
         public void Connect(string password) {
             if(Disposed) {
                 throw new ObjectDisposedException("this");

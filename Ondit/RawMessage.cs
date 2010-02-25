@@ -5,7 +5,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Ondit {
-    public class RawMessage : IEquatable<RawMessage> {
+    /// <summary>
+    /// Provides a container for a single IRC message.
+    /// </summary>
+    public sealed class RawMessage : IEquatable<RawMessage> {
         internal static class Expressions {
             public static Regex GetFullMatcher(string expression) {
                 return new Regex(@"^(" + expression + @")$", RegexOptions.IgnorePatternWhitespace);
@@ -42,52 +45,85 @@ namespace Ondit {
             public static string LazyMessage = @"(:(?<prefix>.*?)[ ]+)?  (?<args>.*?)  ([ ]:(?<lastarg>.*?))?";
         }
 
+        /// <summary>
+        /// Source of the message.
+        /// </summary>
         public RawMessagePrefix Prefix {
             get;
             set;
         }
 
+        /// <summary>
+        /// Type of message.
+        /// </summary>
         public string Command {
             get;
             set;
         }
 
+        /// <summary>
+        /// Additional arguments the message contains.
+        /// </summary>
         public string[] Arguments {
             get;
             set;
         }
 
+        /// <summary>
+        /// Creates an empty message.
+        /// </summary>
         public RawMessage() :
             this(null) {
         }
 
+        /// <summary>
+        /// Creates a message.
+        /// </summary>
+        /// <param name="command">Type of message.</param>
+        /// <param name="arguments">Additional arguments the message contains.</param>
         public RawMessage(string command, params string[] arguments) :
             this(command, arguments, (RawMessagePrefix)null) {
         }
 
+        /// <summary>
+        /// Creates a message.
+        /// </summary>
+        /// <param name="command">Type of message.</param>
+        /// <param name="arguments">Additional arguments the message contains.</param>
+        /// <param name="prefix">Source of the message.</param>
         public RawMessage(string command, string[] arguments, string prefix) :
             this(command, arguments, new RawMessagePrefix(prefix)) {
         }
 
+        /// <summary>
+        /// Creates a message.
+        /// </summary>
+        /// <param name="command">Type of message.</param>
+        /// <param name="arguments">Additional arguments the message contains.</param>
+        /// <param name="prefix">Source of the message.</param>
         public RawMessage(string command, string[] arguments, RawMessagePrefix prefix) {
             Command = command;
             Arguments = arguments;
             Prefix = prefix;
         }
 
+        /// <summary>
+        /// Checks whether this message is a valid one to sent.
+        /// </summary>
+        /// <returns>True if the message is valid.</returns>
         public bool IsValid() {
             return IsPrefixValid() && IsCommandValid() && IsArgumentsValid();
         }
 
-        public bool IsPrefixValid() {
+        private bool IsPrefixValid() {
             return Prefix == null || Prefix.IsValid();
         }
 
-        public bool IsCommandValid() {
+        private bool IsCommandValid() {
             return Command != null && Expressions.GetFullMatcher(Expressions.Command).IsMatch(Command);
         }
 
-        public bool IsArgumentsValid() {
+        private bool IsArgumentsValid() {
             if(Arguments == null) {
                 return true;
             }
@@ -111,6 +147,11 @@ namespace Ondit {
             return true;
         }
 
+        /// <summary>
+        /// Converts a raw string message to a RawMessage as defined by the IRC RFC.
+        /// </summary>
+        /// <param name="raw">String containing the raw message.</param>
+        /// <returns>Message <paramref name="raw"/> represents.</returns>
         public static RawMessage FromString(string raw) {
             var re = Expressions.GetFullMatcher(Expressions.LazyMessage);
 
@@ -141,6 +182,10 @@ namespace Ondit {
             return message;
         }
 
+        /// <summary>
+        /// Converts this message into a raw string message as defined by the IRC RFC.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString() {
             string output = "";
 
