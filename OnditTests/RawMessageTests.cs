@@ -50,6 +50,11 @@ namespace Ondit.Tests {
         }
 
         [Test]
+        public static void ToStringExceptions() {
+            Assert.Throws<InvalidOperationException>(() => { (new RawMessage(null)).ToString(); });
+        }
+
+        [Test]
         public static void Equals() {
             Assert.AreEqual(new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"), new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"));
             Assert.AreNotEqual(new RawMessage("abc", new string[] { "def", "ghi jkl" }, "mno"), new RawMessage("abq", new string[] { "def", "ghi jkl" }, "mno"));
