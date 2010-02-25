@@ -13,6 +13,23 @@ namespace Ondit.Client {
         Connected
     };
 
+    public class ConnectionStatusEventArgs : EventArgs {
+        public ConnectionStatus OldStatus {
+            get;
+            set;
+        }
+
+        public ConnectionStatus NewStatus {
+            get;
+            set;
+        }
+
+        public ConnectionStatusEventArgs(ConnectionStatus oldStatus, ConnectionStatus newStatus) {
+            OldStatus = oldStatus;
+            NewStatus = newStatus;
+        }
+    }
+
     /// <summary>
     /// A useful IRC client.  Handles authentication, channels, messages, etc. and provides a useful interface for them.
     /// </summary>
@@ -37,9 +54,22 @@ namespace Ondit.Client {
         /// Current state of the IRC connection.
         /// </summary>
         public ConnectionStatus ConnectionStatus {
-            get;
-            protected set;
+            get {
+                return connectionStatus;
+            }
+
+            protected set {
+                if(value == connectionStatus) {
+                    return;
+                }
+
+                var old = connectionStatus;
+
+                OnConnectionStatusChanged(new ConnectionStatusEventArgs(old, value));
+            }
         }
+
+        private ConnectionStatus connectionStatus = ConnectionStatus.NotConnected;
 
         private void Init() {
             Channels = new ChannelManager(this);
@@ -109,6 +139,15 @@ namespace Ondit.Client {
             while(ConnectionStatus == ConnectionStatus.Connecting) {
                 HandleMessageBlock();
             }
+        }
+
+        /// <summary>
+        /// Fired when the state of the connection changes.
+        /// </summary>
+        public event EventHandler<ConnectionStatusEventArgs> ConnectionStatusChanged;
+
+        protected virtual void OnConnectionStatusChanged(ConnectionStatusEventArgs e) {
+            FireEvent(ConnectionStatusChanged, e);
         }
 
         private void CheckMessage(object sender, RawMessageEventArgs e) {

@@ -108,5 +108,31 @@ namespace Ondit.Tests.Client {
                 }
             }
         }
+
+        [Test]
+        public void ConnectionStatusChangedEvent() {
+            string input = "001 :Welcome\r\n";
+
+            var writer = new IO.Helpers.DummyRawMessageWriter();
+
+            using(var stringReader = new StringReader(input))
+            using(var reader = new RawMessageTextReader(stringReader)) {
+                using(var client = new Ondit.Client.Client(reader, writer)) {
+                    ConnectionStatus? connectionStatusChanged = null;
+
+                    client.ConnectionStatusChanged += (sender, e) => {
+                        connectionStatusChanged = e.NewStatus;
+                    };
+
+                    client.Connect();
+
+                    Assert.AreEqual(ConnectionStatus.Connecting, connectionStatusChanged);
+
+                    client.HandleMessage();
+
+                    Assert.AreEqual(ConnectionStatus.Connected, connectionStatusChanged);
+                }
+            }
+        }
     }
 }
