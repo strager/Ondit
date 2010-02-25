@@ -34,11 +34,7 @@ namespace Ondit.Client {
             return socket;
         }
 
-        public ClientBase() {
-        }
-
-        public ClientBase(string host, int port) :
-            this() {
+        public ClientBase(string host, int port) {
             foreach(var address in Dns.GetHostEntry(host).AddressList) {
                 var socket = MakeSocket(new IPEndPoint(address, port));
 
@@ -73,8 +69,7 @@ namespace Ondit.Client {
             // TODO More error handling.
         }
 
-        public ClientBase(IRawMessageReader reader, IRawMessageWriter writer) :
-            this() {
+        public ClientBase(IRawMessageReader reader, IRawMessageWriter writer) {
             this.reader = reader;
             this.writer = writer;
         }

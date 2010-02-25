@@ -36,10 +36,6 @@ namespace Ondit.Client {
             RawMessageReceived += CheckMessage;
         }
 
-        private Client() {
-            Init();
-        }
-
         public Client(string host, int port) :
             base(host, port) {
             Init();
