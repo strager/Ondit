@@ -20,6 +20,9 @@ namespace Ondit.Client {
         }
     }
 
+    /// <summary>
+    /// A bare IRC client.  Does not do anything meaningful with messages sent and received.
+    /// </summary>
     public class ClientBase : IDisposable {
         private IRawMessageReader reader;
         private IRawMessageWriter writer;
