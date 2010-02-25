@@ -34,6 +34,11 @@ namespace Ondit.Client {
             return socket;
         }
 
+        /// <summary>
+        /// Creates an IRC client by connecting to a socket on <paramref name="host"/> on port <paramref name="port"/>.
+        /// </summary>
+        /// <param name="host">Name of the host to connect to (IP or domain name).</param>
+        /// <param name="port">Port number to connect using.</param>
         public ClientBase(string host, int port) {
             foreach(var address in Dns.GetHostEntry(host).AddressList) {
                 var socket = MakeSocket(new IPEndPoint(address, port));
@@ -69,11 +74,21 @@ namespace Ondit.Client {
             // TODO More error handling.
         }
 
+        /// <summary>
+        /// Creates an IRC client by using the given <see cref="RawMessage"/> reader and writer.
+        /// </summary>
+        /// <param name="reader">Client input reader.</param>
+        /// <param name="writer">Client output writer.</param>
         public ClientBase(IRawMessageReader reader, IRawMessageWriter writer) {
             this.reader = reader;
             this.writer = writer;
         }
 
+        /// <summary>
+        /// Reads one queued message if there are any messages on the queue and handles it.
+        /// </summary>
+        /// <returns>Message handled.</returns>
+        /// <exception cref="ObjectDisposedException"/>
         public RawMessage HandleMessage() {
             if(disposed) {
                 throw new ObjectDisposedException("this");
@@ -88,6 +103,11 @@ namespace Ondit.Client {
             return message;
         }
 
+        /// <summary>
+        /// Reads one queued message if there are any messages on the queue and handles it.  If there are no messages on the queue, waits for one and handles it.
+        /// </summary>
+        /// <returns>Message handled.</returns>
+        /// <exception cref="ObjectDisposedException"/>
         public RawMessage HandleMessageBlock() {
             if(disposed) {
                 throw new ObjectDisposedException("this");
@@ -100,6 +120,11 @@ namespace Ondit.Client {
             return message;
         }
 
+        /// <summary>
+        /// Sends a message to the send queue.
+        /// </summary>
+        /// <param name="message">Message to queue.</param>
+        /// <exception cref="ObjectDisposedException"/>
         public void SendMessage(RawMessage message) {
             if(disposed) {
                 throw new ObjectDisposedException("this");
@@ -114,7 +139,14 @@ namespace Ondit.Client {
             OnRawMessageReceived(new RawMessageEventArgs(message));
         }
 
+        /// <summary>
+        /// Fired when a message is received from the server to the client.
+        /// </summary>
         public event EventHandler<RawMessageEventArgs> RawMessageReceived;
+
+        /// <summary>
+        /// Fired when a message is sent from the client to the server.
+        /// </summary>
         public event EventHandler<RawMessageEventArgs> RawMessageSent;
 
         protected virtual void OnRawMessageReceived(RawMessageEventArgs e) {
@@ -153,6 +185,9 @@ namespace Ondit.Client {
             }
         }
 
+        /// <summary>
+        /// Disposes the IRC client.
+        /// </summary>
         public void Dispose() {
             Dispose(true);
         }
