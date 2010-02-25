@@ -4,31 +4,53 @@ using System.Linq;
 using System.Text;
 
 namespace Ondit {
+    /// <summary>
+    /// Provides a container for the prefix portion of an IRC message.
+    /// </summary>
     public sealed class RawMessagePrefix : IEquatable<RawMessagePrefix> {
+        /// <summary>
+        /// Specifies if the sender has been identified using ident.
+        /// </summary>
         public bool IsIdentified {
             get;
             set;
         }
 
+        /// <summary>
+        /// The nickname of the sender.
+        /// </summary>
         public string Nick {
             get;
             set;
         }
 
+        /// <summary>
+        /// The username of the sender.
+        /// </summary>
         public string UserName {
             get;
             set;
         }
 
+        /// <summary>
+        /// The host of the sender.
+        /// </summary>
         public string Host {
             get;
             set;
         }
 
+        /// <summary>
+        /// Creates an instance of RawMessagePrefix.
+        /// </summary>
         public RawMessagePrefix() {
             IsIdentified = false;
         }
 
+        /// <summary>
+        /// Creates an instance of RawMessagePrefix given a raw prefix string.
+        /// </summary>
+        /// <param name="rawPrefixString">Raw prefix string from an IRC message.</param>
         public RawMessagePrefix(string rawPrefixString) {
             var match = RawMessage.Expressions.GetFullMatcher(RawMessage.Expressions.LazyPrefix).Match(rawPrefixString);
 
@@ -53,6 +75,10 @@ namespace Ondit {
             }
         }
 
+        /// <summary>
+        /// Returns if this instance makes a valid prefix.
+        /// </summary>
+        /// <returns>True if the instance is valid.</returns>
         public bool IsValid() {
             if(Nick == null) {
                 return false;
@@ -73,6 +99,10 @@ namespace Ondit {
             return true;
         }
 
+        /// <summary>
+        /// Returns the prefix string this instance represents.
+        /// </summary>
+        /// <returns>Raw prefix string.</returns>
         public override string ToString() {
             string s = "";
 
