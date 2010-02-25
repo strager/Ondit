@@ -13,18 +13,22 @@ using Ondit.Client;
 
 namespace OnditGui {
     public partial class MainForm : Form {
-        private ClientThreader threader = new ClientThreader();
         private Client client;
+        private Thread clientThread;
 
         public MainForm() {
-            threader.SynchronizingObject = this;
-
             InitializeComponent();
         }
 
         private void connect_Click(object sender, EventArgs e) {
             if(client != null) {
                 client.Dispose();
+                client = null;
+            }
+
+            if(clientThread != null) {
+                clientThread.Abort();
+                clientThread = null;
             }
 
             string host = server.Text;
@@ -36,21 +40,27 @@ namespace OnditGui {
         private void Connection(string host, int port) {
             client = new Client(host, port);
 
-            threader.Client = client;
+            client.SynchronizingObject = this;
 
-            threader.RawMessageSent += MessageSent;
-            threader.RawMessageReceived += MessageReceived;
+            client.RawMessageSent += MessageSent;
+            client.RawMessageReceived += MessageReceived;
 
             client.Connect();
             client.WaitForConnected();
 
-            if(!client.IsConnected) {
+            if(client.ConnectionStatus != ConnectionStatus.Connected) {
                 conversation.Text += "Could not connect to " + host + " on port " + port + "." + Environment.NewLine;
 
                 return;
             }
 
-            threader.Thread.Start();
+            clientThread = new Thread(() => {
+                while(client != null) {
+                    client.HandleMessageBlock();
+                }
+            });
+
+            clientThread.Start();
         }
 
         private void MessageSent(object sender, RawMessageEventArgs e) {
@@ -64,6 +74,49 @@ namespace OnditGui {
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e) {
             if(client != null) {
                 client.Dispose();
+            }
+        }
+
+        private void sendMessage_Click(object sender, EventArgs e) {
+            var m = message.Text;
+
+            if(m.Length == 0) {
+                return;
+            }
+
+            if(m[0] == '/') {
+                int cmdEnd = m.IndexOf(' ');
+
+                if(cmdEnd < 0) {
+                    cmdEnd = m.Length;
+                }
+
+                string cmd = m.Substring(1, cmdEnd - 1);
+                string args = m.Substring(Math.Min(cmdEnd + 1, m.Length)).TrimStart();
+                string[] argWords = args.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                switch(cmd) {
+                    case "join":
+                        string channel = argWords[0];
+                        string password = argWords.Length > 1 ? argWords[1] : null;
+
+                        var chan = client.Channels[channel];
+                        chan.Join(password);
+
+                        break;
+
+                    case "msg":
+                        string receiver = argWords[0];
+                        string msg = args.Substring(Math.Max(receiver.Length + 1, args.Length));
+
+                        if("#&".Contains(receiver[0])) {
+                            client.Channels[receiver].SendMessage(msg);
+                        } else {
+                            client.Users[receiver].SendMessage(msg);
+                        }
+
+                        break;
+                }
             }
         }
     }

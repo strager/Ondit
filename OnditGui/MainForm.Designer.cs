@@ -95,6 +95,7 @@
             this.sendMessage.TabIndex = 6;
             this.sendMessage.Text = "Send";
             this.sendMessage.UseVisualStyleBackColor = true;
+            this.sendMessage.Click += new System.EventHandler(this.sendMessage_Click);
             // 
             // conversation
             // 

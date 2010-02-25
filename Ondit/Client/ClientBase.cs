@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.ComponentModel;
 using System.IO;
 using Ondit;
 using Ondit.IO;
@@ -35,6 +36,14 @@ namespace Ondit.Client {
             socket.Connect(endPoint);
 
             return socket;
+        }
+
+        /// <summary>
+        /// Object to synchronize with for events.
+        /// </summary>
+        public ISynchronizeInvoke SynchronizingObject {
+            get;
+            set;
         }
 
         /// <summary>
@@ -142,6 +151,19 @@ namespace Ondit.Client {
             OnRawMessageReceived(new RawMessageEventArgs(message));
         }
 
+        protected virtual void FireEvent<TEventArgs>(EventHandler<TEventArgs> handler, TEventArgs e) where TEventArgs : EventArgs {
+            if(handler == null) {
+                return;
+            }
+
+            var syncObj = SynchronizingObject;
+            if(syncObj != null) {
+                syncObj.Invoke(handler, new object[] { this, e });
+            } else {
+                handler.Invoke(this, e);
+            }
+        }
+
         /// <summary>
         /// Fired when a message is received from the server to the client.
         /// </summary>
@@ -153,19 +175,11 @@ namespace Ondit.Client {
         public event EventHandler<RawMessageEventArgs> RawMessageSent;
 
         protected virtual void OnRawMessageReceived(RawMessageEventArgs e) {
-            var handler = RawMessageReceived;
-
-            if(handler != null) {
-                handler(this, e);
-            }
+            FireEvent(RawMessageReceived, e);
         }
 
         protected virtual void OnRawMessageSent(RawMessageEventArgs e) {
-            var handler = RawMessageSent;
-
-            if(handler != null) {
-                handler(this, e);
-            }
+            FireEvent(RawMessageSent, e);
         }
 
         private bool disposed = false;
