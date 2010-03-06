@@ -49,7 +49,7 @@ namespace OnditGui {
             client.WaitForConnected();
 
             if(client.ConnectionStatus != ConnectionStatus.Connected) {
-                conversation.Text += "Could not connect to " + host + " on port " + port + "." + Environment.NewLine;
+                conversation.Text += string.Format(@"Could not connect to {1} on port {2}." + Environment.NewLine, host, port);
 
                 return;
             }
