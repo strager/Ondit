@@ -107,7 +107,7 @@ namespace OnditGui {
 
                     case "msg":
                         string receiver = argWords[0];
-                        string msg = args.Substring(Math.Max(receiver.Length + 1, args.Length));
+                        string msg = args.Substring(Math.Min(receiver.Length + 1, args.Length));
 
                         if("#&".Contains(receiver[0])) {
                             client.Channels[receiver].SendMessage(msg);
