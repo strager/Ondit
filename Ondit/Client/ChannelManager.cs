@@ -19,6 +19,10 @@ namespace Ondit.Client {
         }
 
         public ChannelManager(ClientBase client) {
+            if(client == null) {
+                throw new ArgumentNullException("client");
+            }
+
             Client = client;
         }
 

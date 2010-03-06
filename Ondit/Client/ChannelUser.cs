@@ -18,6 +18,10 @@ namespace Ondit.Client {
         private Channel channel;
 
         internal ChannelUser(Channel channel) {
+            if(channel == null) {
+                throw new ArgumentNullException("channel");
+            }
+
             this.channel = channel;
         }
 
