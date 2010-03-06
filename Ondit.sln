@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ondit", "Ondit\Ondit.csproj", "{C1AC9232-8937-4C42-B5F8-4237D324ACDB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnditTests", "OnditTests\OnditTests.csproj", "{5D0072E9-70E3-4DCA-A9BC-750F24D4256F}"
