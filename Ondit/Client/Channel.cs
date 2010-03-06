@@ -55,7 +55,13 @@ namespace Ondit.Client {
         }
 
         internal Channel(ClientBase client, string name) {
+            if(client == null) {
+                throw new ArgumentNullException("client");
+            }
+
             this.name = name;
+
+            Client = client;
 
             this.UserCollection = new List<ChannelUser>();
         }
