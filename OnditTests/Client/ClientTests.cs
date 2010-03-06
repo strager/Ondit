@@ -124,13 +124,17 @@ namespace Ondit.Tests.Client {
                         connectionStatusChanged = e.NewStatus;
                     };
 
+                    Assert.AreEqual(ConnectionStatus.NotConnected, client.ConnectionStatus);
+
                     client.Connect();
 
                     Assert.AreEqual(ConnectionStatus.Connecting, connectionStatusChanged);
+                    Assert.AreEqual(ConnectionStatus.Connecting, client.ConnectionStatus);
 
                     client.HandleMessage();
 
                     Assert.AreEqual(ConnectionStatus.Connected, connectionStatusChanged);
+                    Assert.AreEqual(ConnectionStatus.Connected, client.ConnectionStatus);
                 }
             }
         }

@@ -65,6 +65,8 @@ namespace Ondit.Client {
 
                 var old = connectionStatus;
 
+                connectionStatus = value;
+
                 OnConnectionStatusChanged(new ConnectionStatusEventArgs(old, value));
             }
         }
