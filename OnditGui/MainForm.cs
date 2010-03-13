@@ -73,6 +73,7 @@ namespace OnditGui {
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e) {
             if(client != null) {
+                clientThread.Abort();
                 client.Dispose();
             }
         }
