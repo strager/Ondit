@@ -30,6 +30,23 @@ namespace Ondit.Client {
         }
     }
 
+    public class ConversationMessageEventArgs : EventArgs {
+        public IConversable Sender {
+            get;
+            set;
+        }
+
+        public string Message {
+            get;
+            set;
+        }
+
+        public ConversationMessageEventArgs(IConversable sender, string message) {
+            Sender = sender;
+            Message = message;
+        }
+    }
+
     /// <summary>
     /// A useful IRC client.  Handles authentication, channels, messages, etc. and provides a useful interface for them.
     /// </summary>
@@ -77,7 +94,7 @@ namespace Ondit.Client {
             Channels = new ChannelManager(this);
             Users = new UserManager(this);
 
-            RawMessageReceived += CheckMessage;
+            RawMessageReceived += CheckRawMessage;
         }
 
         /// <summary>
@@ -152,9 +169,16 @@ namespace Ondit.Client {
             FireEvent(ConnectionStatusChanged, e);
         }
 
-        private void CheckMessage(object sender, RawMessageEventArgs e) {
+        public event EventHandler<ConversationMessageEventArgs> ConversationMessageReceived;
+
+        protected virtual void OnConversationMessageReceived(ConversationMessageEventArgs e) {
+            FireEvent(ConversationMessageReceived, e);
+        }
+
+        private void CheckRawMessage(object sender, RawMessageEventArgs e) {
             CheckWelcomeMessage(e.Message);
             CheckPing(e.Message);
+            CheckPrivateMessage(e.Message);
         }
 
         private void CheckWelcomeMessage(RawMessage message) {
@@ -167,6 +191,25 @@ namespace Ondit.Client {
             if(message.Command == "PING") {
                 SendMessage(new RawMessage("PONG", message.Arguments));
             }
+        }
+
+        private void CheckPrivateMessage(RawMessage message) {
+            if(message.Command != "PRIVMSG") {
+                return;
+            }
+
+            string senderString = message.Arguments[0];
+            string messageString = string.Join(" ", message.Arguments.Skip(1).ToArray());
+
+            IConversable sender;
+
+            if(Channel.IsChannelName(senderString)) {
+                sender = Channels[senderString];
+            } else {
+                sender = Users[senderString];
+            }
+
+            OnConversationMessageReceived(new ConversationMessageEventArgs(sender, messageString));
         }
     }
 }

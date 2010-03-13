@@ -44,6 +44,7 @@ namespace OnditGui {
 
             client.RawMessageSent += MessageSent;
             client.RawMessageReceived += MessageReceived;
+            client.ConversationMessageReceived += ConversationMessageReceived;
 
             client.Connect();
             client.WaitForConnected();
@@ -69,6 +70,10 @@ namespace OnditGui {
 
         private void MessageReceived(object sender, RawMessageEventArgs e) {
             receiveQueue.Text += e.Message.ToString() + Environment.NewLine;
+        }
+
+        private void ConversationMessageReceived(object sender, ConversationMessageEventArgs e) {
+            conversation.Text += string.Format(@"{0}: {1}" + Environment.NewLine, e.Sender.ToString(), e.Message);
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e) {
