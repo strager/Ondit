@@ -18,35 +18,16 @@ namespace Ondit.Client {
             internal set;
         }
 
+        public string Target {
+            get {
+                return Name;
+            }
+        }
+
         public IEnumerable<ChannelUser> Users {
             get {
                 return UserCollection;
             }
-        }
-
-        internal ClientBase Client {
-            get;
-            private set;
-        }
-
-        public void Join() {
-            Join(null);
-        }
-
-        public void Join(string key) {
-            Client.SendMessage(new RawMessage("JOIN", Name, key));
-        }
-
-        public void Part() {
-            Client.SendMessage(new RawMessage("PART", Name));
-        }
-
-        public void SendMessage(string message) {
-            Client.SendMessage(new RawMessage("PRIVMSG", Name, message));
-        }
-
-        public void SendNotice(string notice) {
-            Client.SendMessage(new RawMessage("NOTICE", Name, notice));
         }
 
         public override string ToString() {
@@ -58,14 +39,8 @@ namespace Ondit.Client {
             private set;
         }
 
-        internal Channel(ClientBase client, string name) {
-            if(client == null) {
-                throw new ArgumentNullException("client");
-            }
-
+        internal Channel(string name) {
             this.name = name;
-
-            Client = client;
 
             this.UserCollection = new List<ChannelUser>();
         }

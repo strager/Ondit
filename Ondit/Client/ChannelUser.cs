@@ -15,6 +15,12 @@ namespace Ondit.Client {
             internal set;
         }
 
+        public string Target {
+            get {
+                return this.channel.Target;
+            }
+        }
+
         private Channel channel;
 
         internal ChannelUser(Channel channel) {
@@ -23,14 +29,6 @@ namespace Ondit.Client {
             }
 
             this.channel = channel;
-        }
-
-        public void SendMessage(string message) {
-            channel.Client.SendMessage(new RawMessage("PRIVMSG", channel.Name, message));
-        }
-
-        public void SendNotice(string notice) {
-            channel.Client.SendMessage(new RawMessage("NOTICE", channel.Name, notice));
         }
 
         public override string ToString() {

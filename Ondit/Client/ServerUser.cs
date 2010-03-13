@@ -15,21 +15,13 @@ namespace Ondit.Client {
             internal set;
         }
 
-        internal ClientBase Client {
-            get;
-            private set;
+        public string Target {
+            get {
+                return Nick;
+            }
         }
 
-        internal ServerUser(ClientBase client) {
-            Client = client;
-        }
-
-        public void SendMessage(string message) {
-            Client.SendMessage(new RawMessage("PRIVMSG", Nick, message));
-        }
-
-        public void SendNotice(string notice) {
-            Client.SendMessage(new RawMessage("NOTICE", Nick, notice));
+        internal ServerUser() {
         }
 
         public override string ToString() {

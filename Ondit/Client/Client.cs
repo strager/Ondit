@@ -91,8 +91,8 @@ namespace Ondit.Client {
         private ConnectionStatus connectionStatus = ConnectionStatus.NotConnected;
 
         private void Init() {
-            Channels = new ChannelManager(this);
-            Users = new UserManager(this);
+            Channels = new ChannelManager();
+            Users = new UserManager();
 
             RawMessageReceived += CheckRawMessage;
         }
@@ -158,6 +158,38 @@ namespace Ondit.Client {
             while(ConnectionStatus == ConnectionStatus.Connecting) {
                 HandleMessageBlock();
             }
+        }
+
+        public void SendMessage(IConversable receiver, string message) {
+            SendMessage(new RawMessage("PRIVMSG", receiver.Target, message));
+        }
+
+        public void SendMessage(string receiver, string message) {
+            SendMessage(new RawMessage("PRIVMSG", receiver, message));
+        }
+
+        public void SendNotice(IConversable receiver, string message) {
+            SendMessage(new RawMessage("NOTICE", receiver.Target, message));
+        }
+
+        public void SendNotice(string receiver, string message) {
+            SendMessage(new RawMessage("NOTICE", receiver, message));
+        }
+
+        public void JoinChannel(string channel, string key = null) {
+            SendMessage(new RawMessage("JOIN", channel, key));
+        }
+
+        public void JoinChannel(Channel channel, string key = null) {
+            SendMessage(new RawMessage("JOIN", channel.Name, key));
+        }
+
+        public void PartChannel(string channel) {
+            SendMessage(new RawMessage("PART", channel));
+        }
+
+        public void PartChannel(Channel channel) {
+            SendMessage(new RawMessage("PART", channel.Name));
         }
 
         /// <summary>

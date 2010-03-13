@@ -106,8 +106,7 @@ namespace OnditGui {
                         string channel = argWords[0];
                         string password = argWords.Length > 1 ? argWords[1] : null;
 
-                        var chan = client.Channels[channel];
-                        chan.Join(password);
+                        client.JoinChannel(channel, password);
 
                         break;
 
@@ -115,11 +114,7 @@ namespace OnditGui {
                         string receiver = argWords[0];
                         string msg = args.Substring(Math.Min(receiver.Length + 1, args.Length));
 
-                        if("#&".Contains(receiver[0])) {
-                            client.Channels[receiver].SendMessage(msg);
-                        } else {
-                            client.Users[receiver].SendMessage(msg);
-                        }
+                        client.SendMessage(receiver, msg);
 
                         break;
                 }

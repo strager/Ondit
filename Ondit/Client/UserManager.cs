@@ -14,15 +14,6 @@ namespace Ondit.Client {
         // TODO Lock to prevent funny business.
         private IDictionary<string, ServerUser> users = new Dictionary<string, ServerUser>();   // nick => user
 
-        public ClientBase Client {
-            get;
-            private set;
-        }
-
-        public UserManager(ClientBase client) {
-            Client = client;
-        }
-
         private ServerUser UserOrNew(string nick) {
             var existing = users.ContainsKey(nick) ? users[nick] : null;
 
@@ -30,9 +21,9 @@ namespace Ondit.Client {
                 return existing;
             }
 
-            var user = new ServerUser(Client);
-
-            user.Nick = nick;
+            var user = new ServerUser {
+                Nick = nick
+            };
 
             return user;
         }

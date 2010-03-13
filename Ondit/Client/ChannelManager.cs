@@ -13,26 +13,13 @@ namespace Ondit.Client {
 
         private IDictionary<string, Channel> channels = new Dictionary<string, Channel>();
 
-        public ClientBase Client {
-            get;
-            private set;
-        }
-
-        public ChannelManager(ClientBase client) {
-            if(client == null) {
-                throw new ArgumentNullException("client");
-            }
-
-            Client = client;
-        }
-
         public Channel this[string channelName] {
             get {
                 if(this.channels.ContainsKey(channelName)) {
                     return channels[channelName];
                 }
 
-                var channel = new Channel(Client, channelName);
+                var channel = new Channel(channelName);
 
                 this.channels[channelName] = channel;
 
