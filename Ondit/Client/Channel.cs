@@ -49,6 +49,10 @@ namespace Ondit.Client {
             Client.SendMessage(new RawMessage("NOTICE", Name, notice));
         }
 
+        public override string ToString() {
+            return Name;
+        }
+
         internal ICollection<ChannelUser> UserCollection {
             get;
             private set;

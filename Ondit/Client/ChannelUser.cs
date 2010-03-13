@@ -32,5 +32,9 @@ namespace Ondit.Client {
         public void SendNotice(string notice) {
             channel.Client.SendMessage(new RawMessage("NOTICE", channel.Name, notice));
         }
+
+        public override string ToString() {
+            return Nick;
+        }
     }
 }

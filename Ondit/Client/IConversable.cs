@@ -7,5 +7,7 @@ namespace Ondit.Client {
     public interface IConversable {
         void SendMessage(string message);
         void SendNotice(string notice);
+
+        string ToString();
     }
 }
