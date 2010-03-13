@@ -71,6 +71,7 @@
     <Compile Include="Client\ChannelUser.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientBase.cs" />
+    <Compile Include="Client\ClientHelpers.cs" />
     <Compile Include="Client\UserManager.cs" />
     <Compile Include="Client\IConversable.cs" />
     <Compile Include="Client\ServerUser.cs" />

@@ -67,7 +67,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\ChannelTests.cs" />
+    <Compile Include="Client\ChannelUserTests.cs" />
     <Compile Include="Client\ClientTests.cs" />
+    <Compile Include="Client\ServerUserTests.cs" />
     <Compile Include="IO\Helpers\DummyRawMessageReader.cs" />
     <Compile Include="IO\Helpers\DummyRawMessageWriter.cs" />
     <Compile Include="IO\RawMessageTextReaderTests.cs" />

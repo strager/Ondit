@@ -39,10 +39,10 @@ namespace Ondit.Client {
             private set;
         }
 
-        internal Channel(string name) {
+        public Channel(string name) {
             this.name = name;
 
-            this.UserCollection = new List<ChannelUser>();
+            UserCollection = new List<ChannelUser>();
         }
 
         public static bool IsChannelName(string name) {

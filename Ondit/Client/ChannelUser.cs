@@ -7,28 +7,31 @@ namespace Ondit.Client {
     public class ChannelUser : IConversable {
         public string Nick {
             get;
-            internal set;
+            set;
         }
 
         public char ModeChar {
             get;
-            internal set;
+            set;
         }
 
         public string Target {
             get {
-                return this.channel.Target;
+                return Channel.Target;
             }
         }
 
-        private Channel channel;
+        public Channel Channel {
+            get;
+            private set;
+        }
 
-        internal ChannelUser(Channel channel) {
+        public ChannelUser(Channel channel) {
             if(channel == null) {
                 throw new ArgumentNullException("channel");
             }
 
-            this.channel = channel;
+            Channel = channel;
         }
 
         public override string ToString() {
