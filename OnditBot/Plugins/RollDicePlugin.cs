@@ -20,7 +20,7 @@ namespace OnditBot.Plugins {
             }
         }
 
-        protected override void  MessageReceived(IConversable sender, string message) {
+        protected override void MessageReceived(IConversable sender, string message) {
             int roll = random.Next(1, 6);
 
             Client.SendMessage(sender, string.Format("Rolling a 6-sided die: {0}", roll));
