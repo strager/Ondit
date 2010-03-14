@@ -47,7 +47,10 @@ namespace Ondit.Client {
 
         public ChannelUser this[string nick] {
             get {
-                return Users.SingleOrDefault((user) => user.Nick == nick);
+                var user = Users.SingleOrDefault((u) => u.Nick == nick)
+                    ?? new ChannelUser(this) { Nick = nick };
+
+                return user;
             }
         }
 
