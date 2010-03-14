@@ -179,6 +179,8 @@ namespace Ondit.Client {
             CheckWelcomeMessage(e.Message);
             CheckPing(e.Message);
             CheckPrivateMessage(e.Message);
+            CheckTopic(e.Message);
+            CheckTopicChange(e.Message);
         }
 
         private void CheckWelcomeMessage(RawMessage message) {
@@ -211,6 +213,28 @@ namespace Ondit.Client {
             }
 
             OnConversationMessageReceived(new ConversationMessageEventArgs(sender, messageString));
+        }
+
+        private void CheckTopic(RawMessage message) {
+            if(message.Command != "331" && message.Command != "332") {
+                return;
+            }
+
+            string channel = message.Arguments[0];
+            string topic = message.Command == "331" ? "" : message.Arguments[1];
+
+            Channels[channel].Topic = topic;
+        }
+
+        private void CheckTopicChange(RawMessage message) {
+            if(message.Command != "TOPIC") {
+                return;
+            }
+
+            string channel = message.Arguments[0];
+            string topic = message.Arguments[1];
+
+            Channels[channel].Topic = topic;
         }
     }
 }
