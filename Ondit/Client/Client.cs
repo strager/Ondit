@@ -94,6 +94,8 @@ namespace Ondit.Client {
             Channels = new ChannelManager();
             Users = new UserManager();
 
+            InitMessageHandlers();
+
             RawMessageReceived += CheckRawMessage;
         }
 
@@ -175,66 +177,60 @@ namespace Ondit.Client {
             FireEvent(ConversationMessageReceived, e);
         }
 
-        private void CheckRawMessage(object sender, RawMessageEventArgs e) {
-            CheckWelcomeMessage(e.Message);
-            CheckPing(e.Message);
-            CheckPrivateMessage(e.Message);
-            CheckTopic(e.Message);
-            CheckTopicChange(e.Message);
-        }
+        private delegate void RawMessageHandler(RawMessage message);
 
-        private void CheckWelcomeMessage(RawMessage message) {
-            if(message.Command == "001") {
+        private IDictionary<string, RawMessageHandler> messageHandlers = new Dictionary<string, RawMessageHandler>();
+
+        private void InitMessageHandlers() {
+            messageHandlers["001"] = (message) => {
                 ConnectionStatus = ConnectionStatus.Connected;
-            }
-        }
+            };
 
-        private void CheckPing(RawMessage message) {
-            if(message.Command == "PING") {
+            messageHandlers["PING"] = (message) => {
                 SendMessage(new RawMessage("PONG", message.Arguments));
-            }
+            };
+
+            messageHandlers["PRIVMSG"] = (message) => {
+                string senderString = message.Prefix == null ? null : message.Prefix.Nick;
+                string destinationString = message.Arguments[0];
+                string messageString = string.Join(" ", message.Arguments.Skip(1).ToArray());
+
+                IConversable sender;
+
+                if(Channel.IsChannelName(destinationString)) {
+                    sender = Channels[destinationString][senderString];
+                } else {
+                    sender = Users[senderString];
+                }
+
+                OnConversationMessageReceived(new ConversationMessageEventArgs(sender, messageString));
+            };
+
+            messageHandlers["331"] = (message) => {
+                string channel = message.Arguments[0];
+
+                Channels[channel].Topic = "";
+            };
+
+            messageHandlers["332"] = (message) => {
+                string channel = message.Arguments[0];
+                string topic = message.Arguments[1];
+
+                Channels[channel].Topic = topic;
+            };
+
+            messageHandlers["TOPIC"] = (message) => {
+                string channel = message.Arguments[0];
+                string topic = message.Arguments[1];
+
+                Channels[channel].Topic = topic;
+            };
         }
 
-        private void CheckPrivateMessage(RawMessage message) {
-            if(message.Command != "PRIVMSG") {
-                return;
+        private void CheckRawMessage(object sender, RawMessageEventArgs e) {
+            if(messageHandlers.ContainsKey(e.Message.Command)) {
+                messageHandlers[e.Message.Command](e.Message);
             }
-
-            string senderString = message.Prefix == null ? null : message.Prefix.Nick;
-            string destinationString = message.Arguments[0];
-            string messageString = string.Join(" ", message.Arguments.Skip(1).ToArray());
-
-            IConversable sender;
-
-            if(Channel.IsChannelName(destinationString)) {
-                sender = Channels[destinationString][senderString];
-            } else {
-                sender = Users[senderString];
-            }
-
-            OnConversationMessageReceived(new ConversationMessageEventArgs(sender, messageString));
-        }
-
-        private void CheckTopic(RawMessage message) {
-            if(message.Command != "331" && message.Command != "332") {
-                return;
-            }
-
-            string channel = message.Arguments[0];
-            string topic = message.Command == "331" ? "" : message.Arguments[1];
-
-            Channels[channel].Topic = topic;
-        }
-
-        private void CheckTopicChange(RawMessage message) {
-            if(message.Command != "TOPIC") {
-                return;
-            }
-
-            string channel = message.Arguments[0];
-            string topic = message.Arguments[1];
-
-            Channels[channel].Topic = topic;
         }
     }
 }
