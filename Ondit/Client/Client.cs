@@ -198,13 +198,14 @@ namespace Ondit.Client {
                 return;
             }
 
-            string senderString = message.Arguments[0];
+            string senderString = message.Prefix == null ? null : message.Prefix.Nick;
+            string destinationString = message.Arguments[0];
             string messageString = string.Join(" ", message.Arguments.Skip(1).ToArray());
 
             IConversable sender;
 
-            if(Channel.IsChannelName(senderString)) {
-                sender = Channels[senderString];
+            if(Channel.IsChannelName(destinationString)) {
+                sender = Channels[destinationString][senderString];
             } else {
                 sender = Users[senderString];
             }

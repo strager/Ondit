@@ -45,6 +45,12 @@ namespace Ondit.Client {
             UserCollection = new List<ChannelUser>();
         }
 
+        public ChannelUser this[string nick] {
+            get {
+                return Users.SingleOrDefault((user) => user.Nick == nick);
+            }
+        }
+
         public static bool IsChannelName(string name) {
             if(name.Length < 1) {
                 return false;
