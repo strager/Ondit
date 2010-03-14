@@ -14,9 +14,9 @@ namespace OnditBot.Plugins {
             }
         }
 
-        public override string Trigger {
+        public override IEnumerable<string> Triggers {
             get {
-                return "roll";
+                yield return "roll";
             }
         }
 

@@ -34,26 +34,30 @@ namespace OnditBot.Plugins {
             }
         }
 
-        public abstract string Trigger {
+        public abstract IEnumerable<string> Triggers {
             get;
         }
 
         protected abstract void MessageReceived(IConversable sender, string message);
 
         private void HandleConversationMessage(object sender, ConversationMessageEventArgs e) {
-            var match = GetTriggerRegex().Match(e.Message);
+            foreach(var trigger in Triggers) {
+                var match = GetTriggerRegex(trigger).Match(e.Message);
 
-            if(!match.Success) {
-                return;
+                if(!match.Success) {
+                    continue;
+                }
+
+                MessageReceived(e.Sender, match.Groups["message"].Value);
+
+                break;
             }
-
-            MessageReceived(e.Sender, match.Groups["message"].Value);
         }
 
-        private Regex GetTriggerRegex() {
+        private static Regex GetTriggerRegex(string trigger) {
             // TODO More sturdy.
-            var s = CommandFormat.Replace("$trigger$", Trigger);
-            s = s.Replace("$message$", "(?<message>.*)");
+            var s = CommandFormat.Replace(@"$trigger$", trigger);
+            s = s.Replace("$message$", @"\b(?<message>.*)\b");
 
             return new Regex(s, RegexOptions.IgnorePatternWhitespace);
         }
