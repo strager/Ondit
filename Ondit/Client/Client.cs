@@ -13,44 +13,10 @@ namespace Ondit.Client {
         Connected
     };
 
-    public class ConnectionStatusEventArgs : EventArgs {
-        public ConnectionStatus OldStatus {
-            get;
-            set;
-        }
-
-        public ConnectionStatus NewStatus {
-            get;
-            set;
-        }
-
-        public ConnectionStatusEventArgs(ConnectionStatus oldStatus, ConnectionStatus newStatus) {
-            OldStatus = oldStatus;
-            NewStatus = newStatus;
-        }
-    }
-
-    public class ConversationMessageEventArgs : EventArgs {
-        public IConversable Sender {
-            get;
-            set;
-        }
-
-        public string Message {
-            get;
-            set;
-        }
-
-        public ConversationMessageEventArgs(IConversable sender, string message) {
-            Sender = sender;
-            Message = message;
-        }
-    }
-
     /// <summary>
     /// A useful IRC client.  Handles authentication, channels, messages, etc. and provides a useful interface for them.
     /// </summary>
-    public class Client : ClientBase {
+    public partial class Client : ClientBase {
         /// <summary>
         /// Manager for the active channels on the IRC server.
         /// </summary>
@@ -160,21 +126,6 @@ namespace Ondit.Client {
             while(ConnectionStatus == ConnectionStatus.Connecting) {
                 HandleMessageBlock();
             }
-        }
-
-        /// <summary>
-        /// Fired when the state of the connection changes.
-        /// </summary>
-        public event EventHandler<ConnectionStatusEventArgs> ConnectionStatusChanged;
-
-        protected virtual void OnConnectionStatusChanged(ConnectionStatusEventArgs e) {
-            FireEvent(ConnectionStatusChanged, e);
-        }
-
-        public event EventHandler<ConversationMessageEventArgs> ConversationMessageReceived;
-
-        protected virtual void OnConversationMessageReceived(ConversationMessageEventArgs e) {
-            FireEvent(ConversationMessageReceived, e);
         }
 
         private delegate void RawMessageHandler(RawMessage message);
