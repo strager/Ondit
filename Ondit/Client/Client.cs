@@ -171,10 +171,14 @@ namespace Ondit.Client {
             };
 
             messageHandlers["TOPIC"] = (message) => {
-                string channel = message.Arguments[0];
+                string channelString = message.Arguments[0];
                 string topic = message.Arguments[1];
 
-                Channels[channel].Topic = topic;
+                var channel = Channels[channelString];
+                
+                channel.Topic = topic;
+
+                OnChannelTopicChanged(new ChannelTopicEventArgs(channel, topic, channel.GetUserFromPrefix(message.Prefix)));
             };
         }
 

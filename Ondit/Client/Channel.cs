@@ -54,6 +54,14 @@ namespace Ondit.Client {
             }
         }
 
+        public ChannelUser GetUserFromPrefix(RawMessagePrefix prefix) {
+            var user = this[prefix.Nick];
+
+            // TODO Assign parts.
+
+            return user;
+        }
+
         public static bool IsChannelName(string name) {
             if(name.Length < 1) {
                 return false;
